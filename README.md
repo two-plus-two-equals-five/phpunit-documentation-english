@@ -2,14 +2,12 @@
 
 ## Requirements
 
-- Python
-- [Sphinx](http://www.sphinx-doc.org/)
-- [Read the Docs Sphinx Theme](https://github.com/rtfd/sphinx_rtd_theme)
+- Docker
 
 ## Building the HTML Documentation
 
-To build the complete documentation run:
-
+To generate new example output **and** run the complete HTML documentation, run the following after checking out this repository:
 ```sh
-make html
+docker build -t phpunit-documentation-generator .;
+docker run --rm -v $(pwd):/root phpunit-documentation-generator bash scripts/00-generate-php-unit-documentation.sh;
 ```

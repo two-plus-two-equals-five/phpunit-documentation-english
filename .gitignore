@@ -2,3 +2,8 @@
 /build
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
+.bash_history
+/vendor
+.cache
+.config
+.local

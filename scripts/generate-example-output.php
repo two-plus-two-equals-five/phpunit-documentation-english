@@ -16,10 +16,12 @@ $exclude = [
     'extending-phpunit/OrderIdGeneratorWithDomainSpecificAssertionTest.php',
 ];
 
-$phpunit       = $command = __DIR__ . '/../tools/phpunit';
+$phpunit       = $command = __DIR__ . '/../vendor/bin/phpunit';
 $version       = hash('sha256', trim(PHP_VERSION . shell_exec($phpunit . ' --version')));
 $processed     = processed_read();
 $rootDirectory = realpath(__DIR__ . '/../src/examples') . '/';
+
+print "Generating the latest PHPUnit example outputs for use in documentation files...\n";
 
 foreach (new GlobIterator(__DIR__ . '/../src/examples/**/*Test.php') as $test) {
     $currentFile = str_replace($rootDirectory, '', $test->getRealPath());
@@ -63,7 +65,7 @@ foreach (new GlobIterator(__DIR__ . '/../src/examples/**/*Test.php') as $test) {
 
     file_put_contents(
         $test . '.out',
-        './tools/phpunit ' . $options . 'tests/' . $test->getBasename() . PHP_EOL .
+        $command . $options . 'tests/' . $test->getBasename() . PHP_EOL .
         str_replace(
             [
                 dirname($test->getRealPath()),
@@ -80,9 +82,14 @@ foreach (new GlobIterator(__DIR__ . '/../src/examples/**/*Test.php') as $test) {
     print '[processed] ' . $currentFile . PHP_EOL;
 }
 
+print "Example output generation complete.\n";
+
 ksort($processed);
 
+
+print 'Writing ' . PROCESSED_JSON_FILE . ' file...';
 file_put_contents(PROCESSED_JSON_FILE, json_encode($processed, JSON_PRETTY_PRINT));
+print " done.\n";
 
 function processed_read(): array
 {
